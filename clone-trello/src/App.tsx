@@ -9,7 +9,8 @@ import {
   PencilIcon,
 } from "@heroicons/react/24/outline";
 
-const IGNORE_CLICK_OUTSIDE = "ignore-click-outside";
+const IGNORE_CLICK_OUTSIDE_TITLE_EDIT = "ignore-click-outside-title-edit";
+const IGNORE_CLICK_OUTSIDE_NEW_CARD = "ignore-click-outside-new-card";
 const NEWCARD_TITLE_PLACEHOLDER = "Enter a title for this card...";
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
   const [newCardTitleValue, setNewCardTitleValue] = useState("");
 
   const titleInputRef = useRef(null);
+  const newCardRef = useRef(null);
 
   const showNewCard = () => {
     setIsVisibleNewVard(true);
@@ -46,7 +48,10 @@ function App() {
     setNewCardTitleValue(e.target.value);
   };
 
-  useClickOutside(titleInputRef, deactiveTitleEditMode, [IGNORE_CLICK_OUTSIDE]);
+  useClickOutside(titleInputRef, deactiveTitleEditMode, [
+    IGNORE_CLICK_OUTSIDE_TITLE_EDIT,
+  ]);
+  useClickOutside(newCardRef, hideNewCard, [IGNORE_CLICK_OUTSIDE_NEW_CARD]);
 
   return (
     <section className="flex h-dvh w-full items-start bg-sky-500 pt-3">
@@ -65,7 +70,7 @@ function App() {
                 />
               ) : (
                 <h2
-                  className={`${IGNORE_CLICK_OUTSIDE} text-body1-sm cursor-pointer py-1.5 pl-3 pr-2`}
+                  className={`${IGNORE_CLICK_OUTSIDE_TITLE_EDIT} text-body1-sm cursor-pointer py-1.5 pl-3 pr-2`}
                   onClick={activeTitleEditMode}
                 >
                   1
@@ -84,7 +89,7 @@ function App() {
               </div>
             </div>
             {isVisibleNewCard && (
-              <div>
+              <div ref={newCardRef}>
                 <AutoResizeTextarea
                   value={newCardTitleValue}
                   onChange={handleNewCardTitle}
@@ -103,7 +108,7 @@ function App() {
             )}
           </div>
           {!isVisibleNewCard && (
-            <div className="flex gap-1 pt-2">
+            <div className={`${IGNORE_CLICK_OUTSIDE_NEW_CARD} flex gap-1 pt-2`}>
               <button
                 onClick={showNewCard}
                 className="text-body1-m button flex w-full items-center rounded-lg py-1.5 pl-3 pr-2"
