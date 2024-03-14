@@ -11,7 +11,7 @@ export const useClickOutside = (
       if (
         ref.current === null ||
         ref.current.contains(target) ||
-        !ignore.every((v) => !target.classList.contains(v))
+        !ignore.every((v) => !target.closest(`.${v}`))
       ) {
         return;
       }
@@ -23,5 +23,5 @@ export const useClickOutside = (
     return () => {
       document.removeEventListener("click", handler);
     };
-  }, [ref, onClickOutside]);
+  }, [ref, onClickOutside, ignore]);
 };
