@@ -11,47 +11,67 @@ import {
 
 const IGNORE_CLICK_OUTSIDE_TITLE_EDIT = "ignore-click-outside-title-edit";
 const IGNORE_CLICK_OUTSIDE_NEW_CARD = "ignore-click-outside-new-card";
-const NEWCARD_TITLE_PLACEHOLDER = "Enter a title for this card...";
+const IGNORE_CLICK_OUTSIDE_NEW_LIST = "ignore-click-outside-new-list";
+
+const NEW_CARD_TITLE_PLACEHOLDER = "Enter a title for this card...";
+const NEW_LIST_TITLE_PLACEHOLDER = "Enter list title...";
 
 function App() {
-  const [isTitleEditMode, setIsTitleEditMode] = useState(false);
-  const [titleInputValue, setTitleInputValue] = useState("");
-  const [isVisibleNewCard, setIsVisibleNewVard] = useState(false);
-  const [newCardTitleValue, setNewCardTitleValue] = useState("");
+  const [isTitleEdit, setIsTitleEdit] = useState(false);
+  const [titleInput, setTitleInput] = useState("");
+  const [isVisibleNewCard, setIsVisibleNewCard] = useState(false);
+  const [newCardTitle, setNewCardTitle] = useState("");
+  const [isVisibleNewList, setIsVisibleNewList] = useState(false);
+  const [newListTitle, setNewListTitle] = useState("");
 
   const titleInputRef = useRef(null);
   const newCardRef = useRef(null);
+  const newListRef = useRef(null);
 
   const showNewCard = () => {
-    setIsVisibleNewVard(true);
+    setIsVisibleNewCard(true);
   };
 
   const hideNewCard = () => {
-    setNewCardTitleValue("");
-    setIsVisibleNewVard(false);
+    setNewCardTitle("");
+    setIsVisibleNewCard(false);
+  };
+
+  const showNewList = () => {
+    setIsVisibleNewList(true);
+  };
+
+  const hideNewList = () => {
+    setNewListTitle("");
+    setIsVisibleNewList(false);
   };
 
   const activeTitleEditMode = () => {
-    setIsTitleEditMode(true);
+    setIsTitleEdit(true);
   };
 
   const deactiveTitleEditMode = () => {
-    setTitleInputValue("");
-    setIsTitleEditMode(false);
+    setTitleInput("");
+    setIsTitleEdit(false);
   };
 
   const handleTitleInputValue = (e: ChangeEvent<HTMLInputElement>) => {
-    setTitleInputValue(e.target.value);
+    setTitleInput(e.target.value);
   };
 
   const handleNewCardTitle = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    setNewCardTitleValue(e.target.value);
+    setNewCardTitle(e.target.value);
+  };
+
+  const handleNewListTitle = (e: ChangeEvent<HTMLInputElement>) => {
+    setNewListTitle(e.target.value);
   };
 
   useClickOutside(titleInputRef, deactiveTitleEditMode, [
     IGNORE_CLICK_OUTSIDE_TITLE_EDIT,
   ]);
   useClickOutside(newCardRef, hideNewCard, [IGNORE_CLICK_OUTSIDE_NEW_CARD]);
+  useClickOutside(newListRef, hideNewList, [IGNORE_CLICK_OUTSIDE_NEW_LIST]);
 
   return (
     <section className="flex h-dvh w-full items-start bg-sky-500 pt-3">
@@ -59,10 +79,10 @@ function App() {
         <div className="w-full rounded-xl bg-neutral-100 px-2 pb-1.5 pt-2">
           <div className="flex">
             <div className="w-full">
-              {isTitleEditMode ? (
+              {isTitleEdit ? (
                 <input
                   ref={titleInputRef}
-                  value={titleInputValue}
+                  value={titleInput}
                   onChange={handleTitleInputValue}
                   autoFocus
                   type="text"
@@ -91,10 +111,11 @@ function App() {
             {isVisibleNewCard && (
               <div ref={newCardRef}>
                 <AutoResizeTextarea
-                  value={newCardTitleValue}
+                  autoFocus
+                  value={newCardTitle}
                   onChange={handleNewCardTitle}
                   className="text-body1 w-full rounded-lg px-3 py-2 shadow"
-                  placeholder={NEWCARD_TITLE_PLACEHOLDER}
+                  placeholder={NEW_CARD_TITLE_PLACEHOLDER}
                 />
                 <div className="mt-2 flex gap-1">
                   <button className="text-body1-m button-blue rounded px-3 py-1.5 text-white">
@@ -123,11 +144,38 @@ function App() {
           )}
         </div>
       </section>
-      <section className="px-1.5">
-        <button className="text-body1-m flex min-w-72 items-center rounded-xl bg-blue-500 p-3 text-white hover:bg-blue-600 active:bg-blue-500">
-          <PlusIcon className="mr-2 h-4 w-4" />
-          <span>Add another list</span>
-        </button>
+      <section className="min-w-72 px-1.5">
+        {isVisibleNewList ? (
+          <div
+            className="w-full rounded-xl bg-neutral-100 px-2 pb-1.5 pt-2"
+            ref={newListRef}
+          >
+            <input
+              placeholder={NEW_LIST_TITLE_PLACEHOLDER}
+              autoFocus
+              value={newListTitle}
+              type="text"
+              className="text-body1-sm w-full rounded py-1.5 pl-3 pr-2"
+              onChange={handleNewListTitle}
+            />
+            <div className="mt-2 flex gap-1">
+              <button className="text-body1-m button-blue rounded px-3 py-1.5 text-white">
+                Add list
+              </button>
+              <button className="p-1.5" onClick={hideNewList}>
+                <XMarkIcon className="h-5 w-5" />
+              </button>
+            </div>
+          </div>
+        ) : (
+          <button
+            className={`${IGNORE_CLICK_OUTSIDE_NEW_LIST} text-body1-m flex w-full items-center rounded-xl bg-blue-500 p-3 text-white hover:bg-blue-600 active:bg-blue-500`}
+            onClick={showNewList}
+          >
+            <PlusIcon className="mr-2 h-4 w-4" />
+            <span>Add another list</span>
+          </button>
+        )}
       </section>
     </section>
   );
