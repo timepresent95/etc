@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { useClickOutside } from "./hook";
+import { useClickOutside } from "@/hook";
 import {
   PlusIcon,
   RectangleGroupIcon,
