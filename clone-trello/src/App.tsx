@@ -1,12 +1,32 @@
+import { useRef, useState } from "react";
+import { useClickOutside } from "./util";
 import {
   PlusIcon,
   RectangleGroupIcon,
   EllipsisHorizontalIcon,
 } from "@heroicons/react/24/outline";
-import { useState } from "react";
+
+const IGNORE_CLICK_OUTSIDE = "ignore-click-outside";
 
 function App() {
   const [isTitleEditMode, setIsTitleEditMode] = useState(false);
+  const [titleInputValue, setTitleInputValue] = useState("");
+
+  const titleInputRef = useRef(null);
+
+  useClickOutside(
+    titleInputRef,
+    () => {
+      setTitleInputValue("");
+      setIsTitleEditMode(false);
+    },
+    [IGNORE_CLICK_OUTSIDE],
+  );
+
+  const handleTitleInputValue = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTitleInputValue(e.target.value);
+  };
+
   return (
     <section className="flex h-dvh w-full items-start bg-sky-500 pt-3">
       <section className="min-w-72 px-1.5">
@@ -15,12 +35,16 @@ function App() {
             <div className="w-full">
               {isTitleEditMode ? (
                 <input
+                  ref={titleInputRef}
+                  value={titleInputValue}
+                  onChange={handleTitleInputValue}
+                  autoFocus
                   type="text"
                   className="text-body1-sm w-full rounded py-1.5 pl-3 pr-2"
                 />
               ) : (
                 <h2
-                  className="text-body1-sm cursor-pointer py-1.5 pl-3 pr-2"
+                  className={`${IGNORE_CLICK_OUTSIDE} text-body1-sm cursor-pointer py-1.5 pl-3 pr-2`}
                   onClick={() => setIsTitleEditMode(true)}
                 >
                   1
