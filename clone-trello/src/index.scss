@@ -24,20 +24,34 @@ body {
   @extend .text-body1;
   @apply font-medium;
 }
+
 .text-body1-sm {
   @extend .text-body1;
   @apply font-semibold;
 }
 
+.focus-line {
+  @apply shadow-[0_0_0_2px_theme('colors.blue.700')];
+}
+
 @layer base {
   input,
   textarea {
-    @apply shadow-[0_0_0_2px_theme('colors.blue.700')];
+    @extend .focus-line;
+    @apply placeholder:text-slate-600;
   }
 }
 
 @layer components {
   .button {
-    @apply hover:bg-neutral-200 active:bg-neutral-300;
+    @apply cursor-pointer hover:bg-neutral-200 active:bg-neutral-300;
+  }
+
+  .button-light-gray {
+    @apply cursor-pointer hover:bg-neutral-100 active:bg-neutral-200;
+  }
+
+  .button-blue {
+    @apply cursor-pointer bg-blue-700 hover:bg-blue-800  active:bg-blue-950;
   }
 }
