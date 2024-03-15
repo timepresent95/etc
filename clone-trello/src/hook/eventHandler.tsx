@@ -6,7 +6,7 @@ export const useClickOutside = (
   ignore: string[] = [],
 ) => {
   useEffect(() => {
-    const handler = (e: MouseEvent | TouchEvent) => {
+    const handler = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
       if (
         ref.current === null ||
