@@ -1,4 +1,4 @@
-import { ChangeEvent, useRef, useState } from "react";
+import { ChangeEvent, MouseEvent, useRef, useState } from "react";
 import { useClickOutside } from "@/hook";
 import {
   EyeIcon,
@@ -26,7 +26,11 @@ import {
 
 const IGNORE_CLICK_OUTSIDE_TITLE_EDIT = "ignore-click-outside-title-edit";
 
-export default function CardDetail() {
+interface Props {
+  onClose: () => void;
+}
+
+export default function CardDetail({ onClose }: Props) {
   const [isTitleEdit, setIsTitleEdit] = useState(false);
   const [titleInput, setTitleInput] = useState("");
 
@@ -45,14 +49,26 @@ export default function CardDetail() {
     setTitleInput(e.target.value);
   };
 
+  const handleClickOverlay = (e: MouseEvent<HTMLDivElement>) => {
+    if (e.target !== e.currentTarget) {
+      return;
+    }
+    onClose();
+  };
   useClickOutside(titleInputRef, deactiveTitleEdit, [
     IGNORE_CLICK_OUTSIDE_TITLE_EDIT,
   ]);
 
   return (
-    <div className="absolute left-0 top-0 h-dvh w-dvw overflow-auto bg-black/75">
+    <div
+      className="absolute left-0 top-0 h-dvh w-dvw overflow-auto bg-black/75"
+      onClick={handleClickOverlay}
+    >
       <section className="relative mx-auto mb-20 mt-12 w-full max-w-3xl rounded-xl bg-neutral-100 px-4 py-2">
-        <span className="button absolute right-3 top-3 rounded-full p-2.5">
+        <span
+          className="button absolute right-3 top-3 rounded-full p-2.5"
+          onClick={onClose}
+        >
           <XMarkIcon className="h-5 w-5" />
         </span>
         <div className="py-2 pr-11">

@@ -15,7 +15,11 @@ const IGNORE_CLICK_OUTSIDE_NEW_CARD = "ignore-click-outside-new-card";
 
 const NEW_CARD_TITLE_PLACEHOLDER = "Enter a title for this card...";
 
-export default function List() {
+interface Props {
+  onClickCard: () => void;
+}
+
+export default function List({ onClickCard }: Props) {
   const [isTitleEdit, setIsTitleEdit] = useState(false);
   const [titleInput, setTitleInput] = useState("");
   const [isVisibleNewCard, setIsVisibleNewCard] = useState(false);
@@ -86,7 +90,10 @@ export default function List() {
           </button>
         </div>
         <div className="mt-2 flex flex-col gap-2">
-          <div className="text-body1 group relative w-full rounded-lg bg-white px-3 pb-1 pt-2 shadow">
+          <div
+            className="text-body1 group relative w-full rounded-lg bg-white px-3 pb-1 pt-2 shadow"
+            onClick={onClickCard}
+          >
             <h3 className="text-body1 mb-1 cursor-pointer">2</h3>
             <div className="button absolute right-0.5 top-0.5 rounded-full bg-white px-2 py-1.5 opacity-0 group-hover:opacity-100">
               <PencilIcon className="h-4 w-4" />
