@@ -15,7 +15,36 @@ body {
   @apply text-slate-600;
 }
 
+//text-slate-800
+
 // typography
+.text-h1 {
+  @apply text-xl leading-6;
+}
+
+.text-h1-sb {
+  @extend .text-h1;
+  @apply font-semibold;
+}
+
+.text-h3 {
+  @apply text-base leading-5;
+}
+
+.text-h3-sb {
+  @extend .text-h3;
+  @apply font-semibold;
+}
+
+.text-h5 {
+  @apply text-xs leading-5;
+}
+
+.text-h5-sb {
+  @extend .text-h5;
+  @apply font-semibold;
+}
+
 .text-body1 {
   @apply text-sm leading-5;
 }
@@ -25,30 +54,53 @@ body {
   @apply font-medium;
 }
 
-.text-body1-sm {
+.text-body1-sb {
   @extend .text-body1;
   @apply font-semibold;
 }
 
-.focus-line {
-  @apply shadow-[0_0_0_2px_theme('colors.blue.700')];
+.text-body2 {
+  @apply text-xs leading-5;
+}
+
+.text-body2-m {
+  @extend .text-body2;
+  @apply font-medium;
+}
+
+.text-body2-sb {
+  @extend .text-body2;
+  @apply font-semibold;
+}
+
+.text-body2-b {
+  @extend .text-body2;
+  @apply font-bold;
+}
+
+.focus-line-shadow {
+  @apply shadow-[inset_0_0_0_2px_theme('colors.blue.700')];
 }
 
 @layer base {
   input,
   textarea {
-    @extend .focus-line;
+    @extend .focus-line-shadow;
     @apply placeholder:text-slate-600;
   }
 }
 
 @layer components {
   .button {
-    @apply cursor-pointer hover:bg-neutral-200 active:bg-neutral-300;
+    @apply cursor-pointer bg-neutral-100 hover:bg-neutral-200 active:bg-neutral-300;
   }
 
   .button-light-gray {
-    @apply cursor-pointer hover:bg-neutral-100 active:bg-neutral-200;
+    @apply cursor-pointer bg-white hover:bg-neutral-100 active:bg-neutral-200;
+  }
+
+  .button-dark-gray {
+    @apply cursor-pointer bg-neutral-200 hover:bg-neutral-300 active:bg-neutral-400;
   }
 
   .button-blue {

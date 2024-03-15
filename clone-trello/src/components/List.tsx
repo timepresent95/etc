@@ -7,6 +7,7 @@ import {
   EllipsisHorizontalIcon,
   XMarkIcon,
   PencilIcon,
+  EyeIcon,
 } from "@heroicons/react/24/outline";
 
 const IGNORE_CLICK_OUTSIDE_TITLE_EDIT = "ignore-click-outside-title-edit";
@@ -32,16 +33,16 @@ export default function List() {
     setIsVisibleNewCard(false);
   };
 
-  const activeTitleEditMode = () => {
+  const activeTitleEdit = () => {
     setIsTitleEdit(true);
   };
 
-  const deactiveTitleEditMode = () => {
+  const deactiveTitleEdit = () => {
     setTitleInput("");
     setIsTitleEdit(false);
   };
 
-  const handleTitleInputValue = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleTitleInput = (e: ChangeEvent<HTMLInputElement>) => {
     setTitleInput(e.target.value);
   };
 
@@ -49,7 +50,7 @@ export default function List() {
     setNewCardTitle(e.target.value);
   };
 
-  useClickOutside(titleInputRef, deactiveTitleEditMode, [
+  useClickOutside(titleInputRef, deactiveTitleEdit, [
     IGNORE_CLICK_OUTSIDE_TITLE_EDIT,
   ]);
   useClickOutside(newCardRef, hideNewCard, [IGNORE_CLICK_OUTSIDE_NEW_CARD]);
@@ -57,25 +58,28 @@ export default function List() {
   return (
     <section className="min-w-72 px-1.5">
       <div className="w-full rounded-xl bg-neutral-100 px-2 pb-1.5 pt-2">
-        <div className="flex">
+        <div className="flex items-center">
           <div className="w-full">
             {isTitleEdit ? (
               <input
                 ref={titleInputRef}
                 value={titleInput}
-                onChange={handleTitleInputValue}
+                onChange={handleTitleInput}
                 autoFocus
                 type="text"
-                className="text-body1-sm w-full rounded py-1.5 pl-3 pr-2"
+                className="text-body1-sb w-full rounded py-1.5 pl-3 pr-2"
               />
             ) : (
               <h2
-                className={`${IGNORE_CLICK_OUTSIDE_TITLE_EDIT} text-body1-sm cursor-pointer py-1.5 pl-3 pr-2`}
-                onClick={activeTitleEditMode}
+                className={`${IGNORE_CLICK_OUTSIDE_TITLE_EDIT} text-body1-sb cursor-pointer py-1.5 pl-3 pr-2`}
+                onClick={activeTitleEdit}
               >
                 1
               </h2>
             )}
+          </div>
+          <div className="px-1 pb-1 pt-2">
+            <EyeIcon className="h-4 w-4" />
           </div>
           <button className="button rounded-lg p-2">
             <EllipsisHorizontalIcon className="h-4 w-4" />
