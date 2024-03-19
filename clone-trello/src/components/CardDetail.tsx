@@ -1,5 +1,6 @@
 import { ChangeEvent, MouseEvent, useRef, useState } from "react";
 import { useClickOutside } from "@/hook";
+import { TextEditor } from "@/components/common";
 import {
   EyeIcon,
   WindowIcon,
@@ -33,6 +34,8 @@ interface Props {
 export default function CardDetail({ onClose }: Props) {
   const [isTitleEdit, setIsTitleEdit] = useState(false);
   const [titleInput, setTitleInput] = useState("");
+  const [isVisibleDescriptionEditor, setIsVisibleDescriptionEditor] =
+    useState(false);
 
   const titleInputRef = useRef(null);
 
@@ -48,6 +51,14 @@ export default function CardDetail({ onClose }: Props) {
   const handleTitleInput = (e: ChangeEvent<HTMLInputElement>) => {
     setTitleInput(e.target.value);
   };
+
+  const showDescriptionEditor = () => {
+    setIsVisibleDescriptionEditor(true);
+  };
+
+  // const hideDescriptionEditor = () => {
+  //   setIsVisibleDescriptionEditor(false);
+  // };
 
   const handleClickOverlay = (e: MouseEvent<HTMLDivElement>) => {
     if (e.target !== e.currentTarget) {
@@ -74,7 +85,7 @@ export default function CardDetail({ onClose }: Props) {
         <div className="py-2 pr-11">
           <div className="flex items-center">
             <span className="p-1">
-              <WindowIcon className="h-6 w-6 text-slate-600" />
+              <WindowIcon className="h-6 w-6" />
             </span>
             {isTitleEdit ? (
               <input
@@ -122,22 +133,26 @@ export default function CardDetail({ onClose }: Props) {
             <div className="mb-6">
               <div className="flex items-center pb-3 pt-2">
                 <span className="p-1">
-                  <Bars3BottomLeftIcon className="h-6 w-6 text-slate-600" />
+                  <Bars3BottomLeftIcon className="h-6 w-6" />
                 </span>
                 <h3 className="text-h3-sb py-1.5 pl-1.5 pr-2.5">Description</h3>
               </div>
-              <div className="pl-10">
-                <p className="button-dark-gray text-body1-m mb-2 rounded px-3 py-2">
-                  Add a more detailed description...
-                  <br />
-                  <br />
-                </p>
-              </div>
+              {isVisibleDescriptionEditor ? (
+                <TextEditor />
+              ) : (
+                <div className="pl-10" onClick={showDescriptionEditor}>
+                  <p className="button-dark-gray text-body1-m mb-2 rounded px-3 py-2">
+                    Add a more detailed description...
+                    <br />
+                    <br />
+                  </p>
+                </div>
+              )}
             </div>
             <div>
               <div className="flex items-center pb-3 pt-2">
                 <span className="p-1">
-                  <ListBulletIcon className="h-6 w-6 text-slate-600" />
+                  <ListBulletIcon className="h-6 w-6" />
                 </span>
                 <h3 className="text-h3-sb mr-auto py-1.5 pl-1.5 pr-2.5">
                   Activity

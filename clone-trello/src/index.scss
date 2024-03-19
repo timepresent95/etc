@@ -86,7 +86,10 @@ body {
   input,
   textarea {
     @extend .focus-line-shadow;
-    @apply placeholder:text-slate-600;
+    @apply resize-none placeholder:text-slate-600;
+  }
+  div.vertical-line {
+    @apply w-px border-l border-slate-200;
   }
 }
 
