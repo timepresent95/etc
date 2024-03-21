@@ -10,43 +10,42 @@ import {
 } from "@heroicons/react/16/solid";
 import styles from "./TextEditor.module.scss";
 import { SyntheticEvent, useRef, useState } from "react";
+import { Popup, PopupButton, PopupContent } from "./Popup";
 
 function FontSizePopup() {
   return (
-    <>
-      <div
-        className={`${styles.selector} absolute left-0 top-0 grid w-52 grid-rows-7 rounded bg-white py-1 shadow-lg`}
-      >
-        <div className={styles.selected}>
-          <span>Normal text</span>
-          <span className={`${styles["short-cut"]}`}>⌘⌥0</span>
-        </div>
-        <div className="">
-          <h1>Heading 1</h1>
-          <span className={`${styles["short-cut"]}`}>⌘⌥1</span>
-        </div>
-        <div>
-          <h2>Heading 2</h2>
-          <span className={`${styles["short-cut"]}`}>⌘⌥2</span>
-        </div>
-        <div>
-          <h3>Heading 3</h3>
-          <span className={`${styles["short-cut"]}`}>⌘⌥3</span>
-        </div>
-        <div>
-          <h4>Heading 4</h4>
-          <span className={`${styles["short-cut"]}`}>⌘⌥4</span>
-        </div>
-        <div>
-          <h5>Heading 5</h5>
-          <span className={`${styles["short-cut"]}`}>⌘⌥5</span>
-        </div>
-        <div>
-          <h6>Heading 6</h6>
-          <span className={`${styles["short-cut"]}`}>⌘⌥6</span>
-        </div>
+    <div
+      className={`${styles.selector} absolute left-0 top-6 grid w-52 grid-rows-7 rounded bg-white py-1 shadow-lg`}
+    >
+      <div className={styles.selected}>
+        <span>Normal text</span>
+        <span className={`${styles["short-cut"]}`}>⌘⌥0</span>
       </div>
-    </>
+      <div className="">
+        <h1>Heading 1</h1>
+        <span className={`${styles["short-cut"]}`}>⌘⌥1</span>
+      </div>
+      <div>
+        <h2>Heading 2</h2>
+        <span className={`${styles["short-cut"]}`}>⌘⌥2</span>
+      </div>
+      <div>
+        <h3>Heading 3</h3>
+        <span className={`${styles["short-cut"]}`}>⌘⌥3</span>
+      </div>
+      <div>
+        <h4>Heading 4</h4>
+        <span className={`${styles["short-cut"]}`}>⌘⌥4</span>
+      </div>
+      <div>
+        <h5>Heading 5</h5>
+        <span className={`${styles["short-cut"]}`}>⌘⌥5</span>
+      </div>
+      <div>
+        <h6>Heading 6</h6>
+        <span className={`${styles["short-cut"]}`}>⌘⌥6</span>
+      </div>
+    </div>
   );
 }
 
@@ -90,7 +89,7 @@ export default function TextEditor() {
     }
   };
 
-  const onInput = (e: SyntheticEvent) => {
+  const onInput = () => {
     const editor = editorEl.current;
     if (editor === null) {
       return;
@@ -109,12 +108,16 @@ export default function TextEditor() {
       onBlur={() => setIsFocus(false)}
       className={`${isFocus && "focus-line-shadow"} relative rounded border border-stone-200 bg-white p-1`}
     >
-      <FontSizePopup />
       <div className="sibling flex items-center border-b-2 border-stone-200 p-2 font-extrabold leading-4 text-black">
-        <button className="button-light-gray  flex h-6 rounded p-1 ">
-          <span className="w-6">Aa</span>
-          <ChevronDownIcon className="h-4 w-4" />
-        </button>
+        <Popup>
+          <PopupButton className="button-light-gray  flex h-6 rounded p-1">
+            <span className="w-6">Aa</span>
+            <ChevronDownIcon className="h-4 w-4" />
+          </PopupButton>
+          <PopupContent>
+            <FontSizePopup />
+          </PopupContent>
+        </Popup>
         <div className="vertical-line mx-2 my-1 self-stretch"></div>
         <button className="button-light-gray h-6 w-6 rounded p-1 text-center">
           B
