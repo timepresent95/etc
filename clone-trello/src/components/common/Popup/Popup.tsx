@@ -4,11 +4,13 @@ import { useClickOutside } from "@/hook";
 interface PopupContext {
   isOpen: boolean;
   showPopup: () => void;
+  hidePopup: () => void;
 }
 
 export const PopupContext = createContext<PopupContext>({
   isOpen: false,
   showPopup: () => {},
+  hidePopup: () => {},
 });
 
 export const Popup = ({ children }: PropsWithChildren) => {
@@ -26,7 +28,7 @@ export const Popup = ({ children }: PropsWithChildren) => {
   useClickOutside(ref, hidePopup);
 
   return (
-    <PopupContext.Provider value={{ isOpen, showPopup }}>
+    <PopupContext.Provider value={{ isOpen, showPopup, hidePopup }}>
       <div ref={ref} className="relative">
         {children}
       </div>

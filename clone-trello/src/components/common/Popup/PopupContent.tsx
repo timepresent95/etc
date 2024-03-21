@@ -1,8 +1,15 @@
-import { PropsWithChildren, useContext } from "react";
+import { PropsWithChildren, useContext, HTMLAttributes } from "react";
 import { PopupContext } from "./Popup";
 
-export default function PopupContent({ children }: PropsWithChildren) {
-  const { isOpen } = useContext(PopupContext);
+export default function PopupContent({
+  children,
+  ...rest
+}: PropsWithChildren<HTMLAttributes<HTMLDivElement>>) {
+  const { isOpen, hidePopup } = useContext(PopupContext);
 
-  return isOpen ? <>{children}</> : null;
+  return isOpen ? (
+    <div onClick={hidePopup} {...rest}>
+      {children}
+    </div>
+  ) : null;
 }
