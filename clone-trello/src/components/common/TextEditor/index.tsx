@@ -10,73 +10,12 @@ import {
 } from "@heroicons/react/16/solid";
 import styles from "./TextEditor.module.scss";
 import { SyntheticEvent, useRef, useState } from "react";
-import { Popup, PopupButton, PopupContent } from "./Popup";
-
-function FontSizePopup() {
-  return (
-    <div
-      className={`${styles.selector} absolute left-0 top-6 grid w-52 grid-rows-7 rounded bg-white py-1 shadow-lg`}
-    >
-      <div className={styles.selected}>
-        <span>Normal text</span>
-        <span className={`${styles["short-cut"]}`}>⌘⌥0</span>
-      </div>
-      <div className="">
-        <h1>Heading 1</h1>
-        <span className={`${styles["short-cut"]}`}>⌘⌥1</span>
-      </div>
-      <div>
-        <h2>Heading 2</h2>
-        <span className={`${styles["short-cut"]}`}>⌘⌥2</span>
-      </div>
-      <div>
-        <h3>Heading 3</h3>
-        <span className={`${styles["short-cut"]}`}>⌘⌥3</span>
-      </div>
-      <div>
-        <h4>Heading 4</h4>
-        <span className={`${styles["short-cut"]}`}>⌘⌥4</span>
-      </div>
-      <div>
-        <h5>Heading 5</h5>
-        <span className={`${styles["short-cut"]}`}>⌘⌥5</span>
-      </div>
-      <div>
-        <h6>Heading 6</h6>
-        <span className={`${styles["short-cut"]}`}>⌘⌥6</span>
-      </div>
-    </div>
-  );
-}
+import FontSizePopup from "./FontSizePopup";
 
 export default function TextEditor() {
   const editorEl = useRef<HTMLDivElement>(null);
   const [isVisiblePlaceholder, setIsVisiblePlaceholder] = useState(true);
   const [isFocus, setIsFocus] = useState(true);
-
-  // const onBlurHandler = (e: SyntheticEvent<HTMLDivElement>) => {
-  //   console.log(e.target, "blur");
-  // };
-
-  // const onInputHandler = (e: ChangeEvent<HTMLDivElement>) => {
-  //   if (
-  //     e.target.classList.contains("placeholder") &&
-  //     e.target.innerText.replace("Need formatting help? Type /help", "")
-  //       .length > 0
-  //   ) {
-  //     const textLine = (
-  //       <p
-  //         contentEditable={true}
-  //         suppressContentEditableWarning={true}
-  //         key={0}
-  //         className={styles.paragraph}
-  //       >
-  //         {e.target.innerText.replace("Need formatting help? Type /help", "")}
-  //       </p>
-  //     );
-  //     setElements([textLine]);
-  //   }
-  // };
 
   const onSelectHandler = (e: SyntheticEvent) => {
     const target = e.target as HTMLElement;
@@ -109,15 +48,7 @@ export default function TextEditor() {
       className={`${isFocus && "focus-line-shadow"} relative rounded border border-stone-200 bg-white p-1`}
     >
       <div className="sibling flex items-center border-b-2 border-stone-200 p-2 font-extrabold leading-4 text-black">
-        <Popup>
-          <PopupButton className="button-light-gray  flex h-6 rounded p-1">
-            <span className="w-6">Aa</span>
-            <ChevronDownIcon className="h-4 w-4" />
-          </PopupButton>
-          <PopupContent>
-            <FontSizePopup />
-          </PopupContent>
-        </Popup>
+        <FontSizePopup />
         <div className="vertical-line mx-2 my-1 self-stretch"></div>
         <button className="button-light-gray h-6 w-6 rounded p-1 text-center">
           B
