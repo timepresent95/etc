@@ -60,4 +60,16 @@
       @apply mt-4;
     }
   }
+
+  b {
+    @apply font-extrabold;
+  }
+
+  i {
+    @apply italic;
+  }
+}
+
+button.active {
+  @apply bg-sky-100 text-blue-700;
 }

@@ -18,32 +18,45 @@ export default function TextEditor() {
   const editorEl = useRef<HTMLDivElement>(null);
   const [isVisiblePlaceholder, setIsVisiblePlaceholder] = useState(true);
   const [isFocus, setIsFocus] = useState(true);
+  const [hasBold, setHasBold] = useState(false);
+
+  function includeBTag(root: Element | null) {
+    if (root === null) {
+      return false;
+    }
+    if (root.tagName === "B") {
+      return true;
+    }
+    for (const child of root.children) {
+      if (includeBTag(child)) {
+        return true;
+      }
+    }
+    return false;
+  }
 
   const onSelectHandler = (e: SyntheticEvent) => {
     const target = e.target as HTMLElement;
+    const selection = window.getSelection();
+    if (selection === null) {
+      return;
+    }
+    const currentRange = selection.getRangeAt(0);
+    if (currentRange.startContainer === currentRange.endContainer) {
+      setHasBold(currentRange.startContainer.parentElement?.tagName === "B");
+    } else {
+      setHasBold(
+        includeBTag(currentRange.commonAncestorContainer.parentElement),
+      );
+    }
 
     if (isVisiblePlaceholder) {
-      const range = document.createRange();
-      range.setStart(target, 0);
-      const selection = window.getSelection();
-      selection?.removeAllRanges();
-      selection?.addRange(range);
+      const newRange = document.createRange();
+      newRange.setStart(target, 0);
+      selection.removeAllRanges();
+      selection.addRange(newRange);
     }
   };
-
-  function findImmediateChild(node: Node) {
-    if (editorEl.current === null) {
-      return null;
-    }
-    let currentNode: Node | null = node;
-    while (currentNode) {
-      if (currentNode.parentNode === editorEl.current) {
-        return currentNode as HTMLElement;
-      }
-      currentNode = currentNode.parentNode;
-    }
-    return null;
-  }
 
   function getSelectedImmediateChild(range: Range) {
     const ret: HTMLElement[] = [];
@@ -61,44 +74,92 @@ export default function TextEditor() {
 
   function replaceTagName(target: HTMLElement, tagName: string) {
     const newElement = document.createElement(tagName);
-    newElement.textContent = target.textContent;
-
-    // p 요소를 h1 요소로 대체
-    editorEl.current!.replaceChild(newElement, target);
+    newElement.append(...[...target.childNodes]);
+    target.replaceWith(newElement);
     return newElement;
   }
 
   // TODO: 비어있는 영역에 커서가 올라와있거나 선택된 커서가 없는 경우에는 가장 마지막에 해당 타입의 태그 요소를 생성
-  // TODO: 영역의 마지막에 p 태그를 추가하여 줄바꿈 이후에도 항상 p태그를 재생산하도록 구현
+  // TODO: 영역의 마지막에 p 태그를 추가하여 줄바꿈 이후에도 항상 p태그를 재생산하도록 구현 -> MutationObservers 사용
   function changeFontSize(fontType: FontSize) {
     const selection = window.getSelection();
     if (selection === null) {
       return;
     }
     const range = selection.getRangeAt(0);
-    const offset = range.startOffset ?? 0;
-    const paragraphNode = findImmediateChild(range.startContainer);
-    if (paragraphNode) {
-      const tagNames: { [key in FontSize]: string } = {
-        normal: "p",
-        h1: "h1",
-        h2: "h2",
-        h3: "h3",
-        h4: "h4",
-        h5: "h5",
-        h6: "h6",
-      };
+    const { startContainer, startOffset, endContainer, endOffset } = range;
+    const tagNames: { [key in FontSize]: string } = {
+      normal: "p",
+      h1: "h1",
+      h2: "h2",
+      h3: "h3",
+      h4: "h4",
+      h5: "h5",
+      h6: "h6",
+    };
 
-      // XXX: 영역 선택을 유지하는 코드가 제대로 실행되지 않음
-      getSelectedImmediateChild(range).forEach((target) => {
-        const newElement = replaceTagName(target, tagNames[fontType]);
-        const newRange = document.createRange();
-        newRange.setStart(newElement.childNodes[0], offset);
-        newRange.collapse(true);
-        selection.addRange(newRange);
-      });
-    }
+    // XXX: 영역 선택을 유지하는 코드가 제대로 실행되지 않음
+    getSelectedImmediateChild(range).forEach((target) => {
+      replaceTagName(target, tagNames[fontType]);
+    });
+
+    const newSelectRange = document.createRange();
+    newSelectRange.setStart(startContainer, startOffset);
+    newSelectRange.setEnd(endContainer, endOffset);
+    selection?.removeAllRanges();
+    selection?.addRange(newSelectRange);
   }
+
+  function getSelectedTextNodeRanges(selectedRange: Range) {
+    const startNode = selectedRange.startContainer;
+    const endNode = selectedRange.endContainer;
+    const ret: Range[] = [];
+    if (startNode === endNode) {
+      return [selectedRange];
+    }
+    const commonAncestor = selectedRange.commonAncestorContainer;
+    function traverse(root: Node) {
+      if (root.nodeType !== Node.TEXT_NODE) {
+        for (const child of root.childNodes) {
+          traverse(child);
+        }
+        return;
+      }
+      const newRange = document.createRange();
+      if (startNode === root) {
+        newRange.selectNode(startNode);
+        newRange.setStart(startNode, selectedRange.startOffset);
+        ret.push(newRange);
+      } else if (endNode === root) {
+        newRange.selectNode(endNode);
+        newRange.setEnd(endNode, selectedRange.endOffset);
+        ret.push(newRange);
+      } else if (selectedRange.intersectsNode(root)) {
+        newRange.selectNode(root);
+        ret.push(newRange);
+      }
+    }
+    traverse(commonAncestor);
+    return ret;
+  }
+
+  function activeTextBold() {
+    const selection = window.getSelection();
+    if (selection === null) {
+      return;
+    }
+    const range = selection.getRangeAt(0);
+    const selectedTextRanges = getSelectedTextNodeRanges(range);
+    for (const selectedRange of selectedTextRanges) {
+      const boldTag = document.createElement("b");
+      selectedRange.surroundContents(boldTag);
+    }
+    setHasBold(true);
+  }
+
+  const onClickBold = () => {
+    activeTextBold();
+  };
 
   const onInput = () => {
     const editor = editorEl.current;
@@ -132,7 +193,10 @@ export default function TextEditor() {
           </PopupContent>
         </Popup>
         <div className="vertical-line mx-2 my-1 self-stretch"></div>
-        <button className="button-light-gray h-6 w-6 rounded p-1 text-center">
+        <button
+          className={`${hasBold ? styles.active : ""} button-light-gray h-6 w-6 rounded p-1 text-center`}
+          onClick={onClickBold}
+        >
           B
         </button>
         <button className="button-light-gray h-6 w-6 rounded p-1 text-center italic">
