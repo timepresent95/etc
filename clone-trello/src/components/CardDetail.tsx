@@ -71,8 +71,8 @@ export default function CardDetail({ onClose }: Props) {
   ]);
 
   return (
-    <div
-      className="absolute left-0 top-0 h-dvh w-dvw overflow-auto bg-black/75"
+    <section
+      className="fixed left-0 top-0 h-dvh w-dvw overflow-auto bg-black/75"
       onClick={handleClickOverlay}
     >
       <section className="relative mx-auto mb-20 mt-12 w-full max-w-3xl rounded-xl bg-neutral-100 px-4 py-2">
@@ -261,6 +261,6 @@ export default function CardDetail({ onClose }: Props) {
           </div>
         </div>
       </section>
-    </div>
+    </section>
   );
 }

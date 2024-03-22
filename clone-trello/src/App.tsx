@@ -4,7 +4,6 @@ import List from "@/components/List";
 import CardDetail from "@/components/CardDetail";
 
 import { PlusIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import { createPortal } from "react-dom";
 
 const IGNORE_CLICK_OUTSIDE_NEW_LIST = "ignore-click-outside-new-list";
 const NEW_LIST_TITLE_PLACEHOLDER = "Enter list title...";
@@ -76,9 +75,8 @@ function App() {
             </button>
           )}
         </section>
+        {isVisibleCradDetail && <CardDetail onClose={onCloseCardDetail} />}
       </section>
-      {isVisibleCradDetail &&
-        createPortal(<CardDetail onClose={onCloseCardDetail} />, document.body)}
     </>
   );
 }
